@@ -62,6 +62,11 @@ export default {
                     title: '系统首页'
                 },
                 {
+                    icon: 'el-icon-user',
+                    index: 'user',
+                    title: '用户管理'
+                },
+                {
                     icon: 'el-icon-lx-cascades',
                     index: 'assayReportDay',
                     title: '化验报表'
