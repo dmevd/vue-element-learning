@@ -8,6 +8,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
+            <!--查询条件-->
             <div class="handle-box">
                 <label >账号/用户名：<el-input  v-model="query.name" placeholder="请输入" class="handle-input mr10"></el-input></label>
                 <label >角色：
@@ -23,66 +24,51 @@
                 <label style="margin-left: 10px">企业：<el-input  v-model="query.unitName" placeholder="请输入" class="handle-input mr10"></el-input></label>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch" :disabled="!canSearch">搜索</el-button>
             </div>
-            <v-table
-                    is-horizontal-resize
-                    style="width:100%"
-                    :show-vertical-border="false"
-                    row-hover-color="#fafafa"
-                    row-click-color="#edf7ff"
-                    title-bg-color="#f5f7fa"
+            <!--表格-->
+            <my-table
                     :columns="columns"
                     :table-data="tableData"
-                    :paging-index="(query.pageNum-1)*query.pageSize"
-                    :is-loading="isLoading"
-            ></v-table>
+            ></my-table>
 
+            <!--分页插件-->
             <div class="mt20 mb20 bold" style="margin-top: 30px"></div>
-                <v-pagination
-                        ref="pagination"
-                        @page-change="pageChange" @page-size-change="pageSizeChange"
-                        :total="pageTotal"
-                        :page-size="query.pageSize"
-                        :layout="['total', 'prev', 'pager', 'next', 'sizer', 'jumper']"></v-pagination>
-            </div>
+            <el-pagination
+                    @size-change="pageSizeChange"
+                    @current-change="pageChange"
+                    :current-page="query.pageNum"
+                    :page-sizes="[10, 20, 30]"
+                    :page-size="query.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pageTotal">
+            </el-pagination>
 
-<!--            <div class="pagination">-->
-<!--                <el-pagination-->
-<!--                        background-->
-<!--                        layout="total, prev, pager, next"-->
-<!--                        :current-page="query.pageIndex"-->
-<!--                        :page-size="query.pageSize"-->
-<!--                        :total="pageTotal"-->
-<!--                        @current-change="handlePageChange"-->
-<!--                ></el-pagination>-->
-<!--            </div>-->
-<!--        </div>-->
-
-        <!-- 编辑弹出框 -->
-<!--        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">-->
-<!--            <el-form ref="form" :model="form" label-width="70px">-->
-<!--                <el-form-item label="用户名">-->
-<!--                    <el-input v-model="form.name"></el-input>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="地址">-->
-<!--                    <el-input v-model="form.address"></el-input>-->
-<!--                </el-form-item>-->
-<!--            </el-form>-->
-<!--            <span slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="editVisible = false">取 消</el-button>-->
-<!--                <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-<!--            </span>-->
-<!--        </el-dialog>-->
+            <!-- 编辑用户 -->
+            <el-dialog title="修改用户" :visible.sync="editUserConfig.show" width="400px">
+                <el-form :model="editUserConfig.form" style="margin-left: -40px;margin-right: 10px;">
+                    <el-form-item label="账号Id" :label-width="editUserConfig.formLabelWidth">
+                        <el-input v-model="editUserConfig.form.userId"  auto-complete="off" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="账号" :label-width="editUserConfig.formLabelWidth">
+                        <el-input v-model="editUserConfig.form.name"  auto-complete="off" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户名" :label-width="editUserConfig.formLabelWidth">
+                        <el-input v-model="editUserConfig.form.nickName"  auto-complete="off" ></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="editUserConfig.show = false">取 消</el-button>
+                    <el-button type="primary" @click="updateUser">确 定</el-button>
+                </div>
+            </el-dialog>
+        </div>
     </div>
 </template>
 
 <script>
-    // import useraction from './useraction.vue'
+
 
     export default {
         name: "User",
-        components: {
-            useraction: () => import('./useraction.vue')
-        },
         data() {
             return {
                 query: {
@@ -100,9 +86,9 @@
                 isLoading: false,
                 tableData: [],
                 columns: [
-                    {field: 'name', title:'账号', width: 100, titleAlign: 'center',columnAlign:'center', isResize:true},
-                    {field: 'nickName', title:'姓名', width: 100, titleAlign: 'center',columnAlign:'center', isResize:true},
-                    {field: 'role', title: '角色', width: 330, titleAlign: 'center',columnAlign:'center', isResize:true,
+                    {field: 'name', title:'账号', width: 100},
+                    {field: 'nickName', title:'姓名', width: 100},
+                    {field: 'role', title: '角色', width: 230,
                         formatter: function (rowData,rowIndex,pagingIndex,field) {
                             let arr = [];
                             if(rowData.roleList){
@@ -111,11 +97,11 @@
                                     arr.push(item.roleName);
                                 }
                             }
-                            return arr.join(',');
+                            return arr.join(', ');
                         }
                     },
-                    {field: 'unit', title: '企业', width: 330, titleAlign: 'center',columnAlign:'center', isResize:true,
-                        formatter: function (rowData,rowIndex,pagingIndex,field) {
+                    {field: 'unit', title: '企业', width: 230, titleAlign: 'center',columnAlign:'center', isResize:true,
+                        formatter: function (rowData,rowIndex, field) {
                             let arr = [];
                             if(rowData.unitList){
                                 for(let i = 0; i < rowData.unitList.length; i ++){
@@ -123,13 +109,37 @@
                                     arr.push(item.unitName);
                                 }
                             }
-                            return arr.join(',');
+                            return arr.join(', ');
                         }
                     },
-                    {field: 'stateName', title: '状态',width: 110, titleAlign: 'center',columnAlign:'center', isResize:true},
-                    {field: 'edit', title: '操作',width: 110, titleAlign: 'center',columnAlign:'left', componentName:'useraction', isResize:true}
+                    {field: 'stateName', title: '状态',width: 50},
+                    {field: 'edit', title: '操作',width: 190,
+                        edit:[{
+                            name: '禁/启用',
+                            func:this.disableUser
+                        },{
+                            name: '修改',
+                            func: this.showEditUser
+                        },{
+                            name: '绑定企业',
+                            func:this.handleSearch
+                        },{
+                            name: '授权角色',
+                            func:this.handleSearch
+                        }]
+                    }
                 ],
-                canSearch: true
+                canSearch: true,
+
+                editUserConfig:{
+                    show:false,
+                    formLabelWidth: '120px',
+                    form:{
+                        userId:-1,
+                        name:'',
+                        nickName: ''
+                    }
+                }
             };
         },
 
@@ -165,6 +175,7 @@
 
             },
             loadTableData(pageIndex){
+                console.log('查询')
                 this.query.pageNum = pageIndex;
                 this.isLoading = true;
                 this.canSearch = false;
@@ -182,7 +193,52 @@
                 this.query.pageSize = pageSize;
                 this.loadTableData(1)
             },
+            //禁用/启用账号
+            disableUser(data){
+                let param = {
+                    state: data.state === 1 ? 0 : 1,
+                    userId: data.id
+                };
+                this.$confirm('确定'+(data.state === 1 ?　'禁用': '启用')+'该账号?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$api.userService("deleteUser", param).then(res =>{
+                        this.loadTableData(this.query.pageNum)
+                        this.$message({
+                            type: 'success',
+                            message: '操作成功!'
+                        });
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '操作取消!'
+                    });
+                })
 
+
+            },
+            // 弹出编辑用户界面
+            showEditUser(data){
+                this.editUserConfig.form.userId = data.id;
+                this.editUserConfig.form.name = data.name;
+                this.editUserConfig.form.nickName = data.nickName;
+
+                this.editUserConfig.show = true;
+            },
+            //更新用户
+            updateUser(){
+                this.$api.userService("updateUser",this.editUserConfig.form).then(res=>{
+                    this.loadTableData(this.query.pageNum)
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功!'
+                    });
+                    this.editUserConfig.show = false;
+                })
+            }
         }
     }
 

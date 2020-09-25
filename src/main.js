@@ -24,20 +24,23 @@ const i18n = new VueI18n({
     messages
 });
 
-//vue-easytable
-// 引入样式
-import 'vue-easytable/libs/themes-base/index.css'
-// 导入 table 和 分页组件
-import {VTable,VPagination} from 'vue-easytable'
-
-// 注册到全局
-Vue.component(VTable.name, VTable)
-Vue.component(VPagination.name, VPagination)
+// //vue-easytable
+// // 引入样式
+// import 'vue-easytable/libs/themes-base/index.css'
+// // 导入 table 和 分页组件
+// import {VTable,VPagination} from 'vue-easytable'
+//
+// // 注册到全局
+// Vue.component('easy-table', VTable)
+// Vue.component('easy-pagination', VPagination)
 
 
 //自定义组件
+import MyTable from '@/components/basetable/BaseTable.vue';
+Vue.component(MyTable.name, MyTable);
+
+//自定义组件
 import Report from '@/components/report/Report.vue';
-// 不起作用，不知道啥原因
 Vue.component(Report.name, Report);
 
 
