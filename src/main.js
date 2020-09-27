@@ -43,7 +43,8 @@ Vue.component(MyTable.name, MyTable);
 import Report from '@/components/report/Report.vue';
 Vue.component(Report.name, Report);
 
-
+import Validate from '@/utils/validate';
+Vue.use(Validate);
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {

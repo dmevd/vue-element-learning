@@ -21,5 +21,13 @@ api.userService= (action, data) => {
         method: 'post',
         data: client('userService', action, data)
     })
-}
+};
+
+api.unitService= (action, data) => {
+    return request({
+        url: apiUrl,
+        method: 'post',
+        data: client('unitService', action, data)
+    })
+};
 export default api

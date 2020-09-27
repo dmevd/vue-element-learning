@@ -20,9 +20,14 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/user',
+                    path: '/YHGL',
                     component: () => import(/* webpackChunkName: "dashboard" */ '@/view/user/User.vue'),
                     meta: { title: '用户管理' }
+                },
+                {
+                    path: '/SZFXHYBB',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '@/view/analysis/assay/AssayAnalysis.vue'),
+                    meta: { title: '化验分析' }
                 },
                 {
                     path: '/assayReportDay',

@@ -63,13 +63,13 @@ export default {
                 },
                 {
                     icon: 'el-icon-user',
-                    index: 'user',
+                    index: 'YHGL',
                     title: '用户管理'
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    index: 'assayReportDay',
-                    title: '化验报表'
+                    index: 'SZFXHYBB',
+                    title: '化验分析'
                 },
                 {
                     icon: 'el-icon-lx-cascades',
@@ -174,6 +174,47 @@ export default {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+
+        //加载菜单
+        // this.$api.userService("getUserMenuList",{userId:localStorage.getItem("GLO_userId")}).then(res=>{
+        //     let data = res.result;
+        //     let len = data.length;
+        //     let menuList = [];
+        //     menuList.push({
+        //         icon: 'el-icon-lx-home',
+        //         index: 'dashboard',
+        //         title: '系统首页'
+        //     });
+        //     // 获得数据
+        //     for(let i = 0; i < len; i ++) {
+        //         let menu = data[i];
+        //         let children = menu.children;
+        //         let tmp = {
+        //             // icon:menu.icon,
+        //             title: menu.name,
+        //             // path: menu.appUrl,
+        //             index: menu.appUrl,
+        //             subs:[]
+        //         };
+        //         let len2 = children === null ? 0 : children.length;
+        //         if(len2 === 0){
+        //             tmp.subs = null;
+        //         }else{
+        //             for(let j = 0; j < len2; j ++){
+        //                 let child = children[j];
+        //                 tmp.subs.push({
+        //                     index: child.appUrl,
+        //                     // icon: child.icon,
+        //                     title: child.name
+        //                 });
+        //             }
+        //         }
+        //         menuList.push(tmp);
+        //
+        //     }
+        //
+        //     this.items = menuList;
+        // })
     }
 };
 </script>
