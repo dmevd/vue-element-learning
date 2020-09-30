@@ -4,4 +4,7 @@ exports.install = function (Vue, options) {
             callback(new Error('不能为空！'));
         }
     };
+
+
+
 };

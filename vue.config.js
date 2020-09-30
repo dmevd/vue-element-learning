@@ -9,14 +9,19 @@ module.exports = {
     publicPath: './',
     assetsDir: 'static',
     productionSourceMap: false,
-
     chainWebpack:(config)=>{
         config.resolve.alias
             .set('@',resolve('./src'))
             .set('components',resolve('./src/components'))
         //set第一个参数：设置的别名，第二个参数：设置的路径
 
+    },
+
+    devServer: {
+        // 调试端口
+        port: 8989
     }
+
 
     // devServer: {
     //     proxy: {

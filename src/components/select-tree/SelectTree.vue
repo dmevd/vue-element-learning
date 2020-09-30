@@ -28,12 +28,14 @@
                      :show-checkbox="multiple"
                      :node-key="defaultProps.nodeKey ? defaultProps.nodeKey : 'id'"
                      :check-strictly="checkStrictly"
-                     default-expand-all
+                     :default-expand-all="expandAll"
                      :expand-on-click-node="false"
                      :check-on-click-node="multiple"
                      :highlight-current="true"
                      @node-click="handleNodeClick"
-                     @check-change="handleCheckChange"></el-tree>
+                     @check-change="handleCheckChange"
+                     :render-content="renderContent"
+                     ></el-tree>
             <el-select :style="selectStyle" slot="reference" ref="select" :size="size"
                        v-model="selectedData"
                        :multiple="multiple"
@@ -59,6 +61,12 @@
                 type: Array,
                 default () {
                     return [];
+                }
+            },
+            expandAll:{
+                type: Boolean,
+                default(){
+                    return false;
                 }
             },
             defaultProps: {
@@ -109,9 +117,9 @@
                 }
             },
             width: {
-                type: Number,
+                type: String,
                 default () {
-                    return 250;
+                    return '250px';
                 }
             },
             height: {
@@ -126,8 +134,8 @@
                 isShowSelect: false, // 是否显示树状选择器
                 options: [],
                 selectedData: [], // 选中的节点
-                style: 'width:auto;' + 'height:' + this.height + 'px;',
-                selectStyle: 'width:' + (this.width + 24) + 'px;',
+                style: 'width:' + this.width + ';' + 'height:' + this.height + 'px;',
+                selectStyle: 'width: '+ this.width + ';',
                 checkedIds: [],
                 checkedData: []
             };
@@ -206,7 +214,13 @@
             // 多选，节点勾选状态发生变化时的回调
             handleCheckChange () {
                 var checkedKeys = this.$refs.tree.getCheckedKeys(); // 所有被选中的节点的 key 所组成的数组数据
-                this.options = checkedKeys.map((item) => {
+                let keys = [];
+                checkedKeys.map(item =>{
+                    if(item){
+                        keys.push(item)
+                    }
+                });
+                this.options = keys.map((item) => {
                     var node = this.$refs.tree.getNode(item); // 所有被选中的节点对应的node
                     let tmpMap = {};
                     tmpMap.value = node.key;
@@ -257,6 +271,17 @@
                     this.clearSelectedNodes();
                 }
                 this.$emit('change', this.selectedData);
+            },
+            renderContent(h, { node, data, store }) {
+                let label= data.name;
+                let text = '';
+                let sub ='';
+                if(label.indexOf("<sub>") != -1) {
+                    text = label.slice(0,label.indexOf("<sub>"));
+                    sub = label.slice(label.indexOf("<sub>") + 5, label.indexOf("</sub>") );
+                    return <span>{text}<sub>{sub}</sub></span>;
+                }
+                return <span>{label}</span>;
             }
         },
         watch: {
@@ -288,5 +313,14 @@
     }
     .tree-select{
         z-index: 111;
+    }
+
+    .custom-tree-node {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        padding-right: 8px;
     }
 </style>

@@ -1,6 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
+
+// antd 组件 配合element ui使用， 放在element ui 之前 ，有冲突会被element ui覆盖
+import 'ant-design-vue/dist/antd.css';
+import Antd from 'ant-design-vue';
+Vue.use(Antd);
+
 import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import { messages } from './components/common/i18n';
@@ -9,11 +15,10 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
+
 import Api from '@/api/index';
-
-
-
 Vue.prototype.$api = Api;
+
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(ElementUI, {
@@ -24,27 +29,20 @@ const i18n = new VueI18n({
     messages
 });
 
-// //vue-easytable
-// // 引入样式
-// import 'vue-easytable/libs/themes-base/index.css'
-// // 导入 table 和 分页组件
-// import {VTable,VPagination} from 'vue-easytable'
-//
-// // 注册到全局
-// Vue.component('easy-table', VTable)
-// Vue.component('easy-pagination', VPagination)
-
 
 //自定义组件
-import MyTable from '@/components/basetable/BaseTable.vue';
+import MyTable from 'components/basetable/BaseTable.vue';
 Vue.component(MyTable.name, MyTable);
 
 //自定义组件
-import Report from '@/components/report/Report.vue';
+import Report from 'components/report/Report.vue';
 Vue.component(Report.name, Report);
 
 import Validate from '@/utils/validate';
 Vue.use(Validate);
+
+import MyUtils from '@/utils/utils';
+Vue.prototype.$myUtils = MyUtils;
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {

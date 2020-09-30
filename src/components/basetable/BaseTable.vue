@@ -21,12 +21,6 @@
                     </span>
                     <span v-else v-html="scope.row[item.field]"></span>
                 </template>
-
-<!--                <template v-if="typeof item.formatter==='function'" slot-scope="scope">-->
-<!--                    <span-->
-<!--                          :v-html="item.formatter(scope.row ,rowIndex, item.field)">-->
-<!--                                    </span>-->
-<!--                </template>-->
             </el-table-column>
         </el-table>
 

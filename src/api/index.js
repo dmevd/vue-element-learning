@@ -30,4 +30,13 @@ api.unitService= (action, data) => {
         data: client('unitService', action, data)
     })
 };
+
+api.reportService= (action, data) => {
+    return request({
+        url: apiUrl,
+        method: 'post',
+        data: client('reportService', action, data)
+    })
+};
+
 export default api
